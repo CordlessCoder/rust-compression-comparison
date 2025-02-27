@@ -1,8 +1,6 @@
 use anyhow::Context as _;
 use common::{benchmark, Compressor, Decompressor, DescribeScheme};
-use lzzzz::lz4;
-use lzzzz::lz4_hc;
-use lzzzz::lz4f;
+use lzzzz::{lz4, lz4_hc, lz4f};
 use std::io::Read as _;
 
 enum Lz4 {

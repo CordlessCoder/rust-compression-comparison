@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-anyhow = "1.0.71"
+anyhow = "1.0"
 common = { path = "../../common" }
-yazi = "0.1.6"
+yazi = "0.2"

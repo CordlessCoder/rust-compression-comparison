@@ -17,7 +17,6 @@ impl Compressor for Lzo {
         let mut vec = vec![0u8; lzo1x_1::worst_compress(data.len())];
         let slice = lzo1x_1::compress_to_slice(data, &mut vec);
         let len = slice.len();
-        drop(slice);
         vec.resize(len, 0u8);
         Ok(vec)
     }

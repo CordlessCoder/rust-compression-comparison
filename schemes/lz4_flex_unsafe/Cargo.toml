@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-anyhow = "1.0.71"
+anyhow = "1.0"
 common = { path = "../../common" }
-lz4_flex = { version = "0.10.0", default-features = false, features = ["std"] }
+lz4_flex = { version = "0.11", default-features = false, features = ["std"] }

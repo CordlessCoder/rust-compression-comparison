@@ -2,43 +2,43 @@ use anyhow::Context as _;
 use common::{benchmark, Compressor, Decompressor, DescribeScheme};
 use std::io::{Read, Write};
 
-enum Deflate {
+enum DeflateAlgo {
     Deflate(flate2::Compression),
     Zlib(flate2::Compression),
     GZip(flate2::Compression),
 }
 
-impl DescribeScheme for Deflate {
+impl DescribeScheme for DeflateAlgo {
     fn name(&self) -> String {
         "flate2 (rust)".to_string()
     }
     fn settings(&self) -> Option<String> {
         match self {
-            Deflate::Deflate(c) => Some(format!("deflate / level {}", c.level())),
-            Deflate::Zlib(c) => Some(format!("zlib / level {}", c.level())),
-            Deflate::GZip(c) => Some(format!("gzip / level {}", c.level())),
+            DeflateAlgo::Deflate(c) => Some(format!("deflate / level {}", c.level())),
+            DeflateAlgo::Zlib(c) => Some(format!("zlib / level {}", c.level())),
+            DeflateAlgo::GZip(c) => Some(format!("gzip / level {}", c.level())),
         }
     }
 }
 
-impl Compressor for Deflate {
+impl Compressor for DeflateAlgo {
     fn compress(&self, data: &[u8]) -> anyhow::Result<std::vec::Vec<u8>> {
         match self {
-            Deflate::Deflate(level) => {
+            DeflateAlgo::Deflate(level) => {
                 let mut encoder = flate2::write::DeflateEncoder::new(vec![], *level);
                 encoder
                     .write_all(data)
                     .context("deflate compression failed")?;
                 encoder.finish().context("deflate compression failed")
             }
-            Deflate::Zlib(level) => {
+            DeflateAlgo::Zlib(level) => {
                 let mut encoder = flate2::write::ZlibEncoder::new(vec![], *level);
                 encoder
                     .write_all(data)
                     .context("deflate compression failed")?;
                 encoder.finish().context("zlib compression failed")
             }
-            Deflate::GZip(level) => {
+            DeflateAlgo::GZip(level) => {
                 let mut encoder = flate2::write::GzEncoder::new(vec![], *level);
                 encoder
                     .write_all(data)
@@ -49,10 +49,10 @@ impl Compressor for Deflate {
     }
 }
 
-impl Decompressor for Deflate {
+impl Decompressor for DeflateAlgo {
     fn decompress_to(&self, src: &[u8], dst: &mut [u8]) -> anyhow::Result<()> {
         match self {
-            Deflate::Deflate(_) => {
+            DeflateAlgo::Deflate(_) => {
                 let mut decoder = flate2::read::DeflateDecoder::new(src);
                 decoder
                     .read_exact(dst)
@@ -65,7 +65,7 @@ impl Decompressor for Deflate {
                     )),
                 }
             }
-            Deflate::Zlib(_) => {
+            DeflateAlgo::Zlib(_) => {
                 let mut decoder = flate2::read::ZlibDecoder::new(src);
                 decoder
                     .read_exact(dst)
@@ -78,7 +78,7 @@ impl Decompressor for Deflate {
                     )),
                 }
             }
-            Deflate::GZip(_) => {
+            DeflateAlgo::GZip(_) => {
                 let mut decoder = flate2::read::GzDecoder::new(src);
                 decoder
                     .read_exact(dst)
@@ -98,9 +98,9 @@ impl Decompressor for Deflate {
 fn main() -> anyhow::Result<()> {
     let mut schemes = vec![];
     for level in 0..=10 {
-        schemes.push(Deflate::Deflate(flate2::Compression::new(level)));
-        schemes.push(Deflate::Zlib(flate2::Compression::new(level)));
-        schemes.push(Deflate::GZip(flate2::Compression::new(level)));
+        schemes.push(DeflateAlgo::Deflate(flate2::Compression::new(level)));
+        schemes.push(DeflateAlgo::Zlib(flate2::Compression::new(level)));
+        schemes.push(DeflateAlgo::GZip(flate2::Compression::new(level)));
     }
     benchmark(std::io::stdout(), schemes).context("benchmark failed")
 }

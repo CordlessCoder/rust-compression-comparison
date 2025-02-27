@@ -20,18 +20,18 @@ enum BlockSize {
     Worst,
 }
 
-impl Into<brotlic::WindowSize> for WindowSize {
-    fn into(self) -> brotlic::WindowSize {
-        match self {
+impl From<WindowSize> for brotlic::WindowSize {
+    fn from(value: WindowSize) -> Self {
+        match value {
             WindowSize::Best => brotlic::WindowSize::best(),
             WindowSize::Worst => brotlic::WindowSize::worst(),
         }
     }
 }
 
-impl Into<brotlic::BlockSize> for BlockSize {
-    fn into(self) -> brotlic::BlockSize {
-        match self {
+impl From<BlockSize> for brotlic::BlockSize {
+    fn from(val: BlockSize) -> Self {
+        match val {
             BlockSize::Best => brotlic::BlockSize::best(),
             BlockSize::Worst => brotlic::BlockSize::worst(),
         }

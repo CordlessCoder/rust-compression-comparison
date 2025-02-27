@@ -16,11 +16,12 @@ impl Compressor for Zopfli {
     fn compress(&self, data: &[u8]) -> anyhow::Result<std::vec::Vec<u8>> {
         let mut vec = vec![];
         zopfli::compress(
-            &zopfli::Options {
+            zopfli::Options {
                 iteration_count: 5.try_into().unwrap(),
                 maximum_block_splits: 15,
+                ..Default::default()
             },
-            &zopfli::Format::Deflate,
+            zopfli::Format::Deflate,
             data,
             &mut vec,
         )

@@ -2,10 +2,7 @@ use anyhow::Context as _;
 use average::Estimate as _;
 use std::borrow::BorrowMut as _;
 
-pub const SAMPLES: std::num::NonZeroU64 = match std::num::NonZeroU64::new(10) {
-    Some(v) => v,
-    None => [][0],
-}; // see https://stackoverflow.com/a/66838483 for the source of this monstrosity
+pub const SAMPLES: std::num::NonZeroU64 = std::num::NonZeroU64::new(10).unwrap();
 
 pub trait Compressor {
     fn compress(&self, data: &[u8]) -> anyhow::Result<std::vec::Vec<u8>>;
@@ -208,23 +205,22 @@ pub fn benchmark<
     let corpora = read_corpora().context("couldn't read corpora")?;
     for scheme in schemes {
         for corpus in corpora.iter() {
-            let result =
-                benchmark_scheme(scheme.borrow(), &corpus, SAMPLES).with_context(|| {
-                    if let Some(settings) = scheme.borrow().settings() {
-                        format!(
-                            "benchmark failed for scheme {} (settings '{}') with corpus {}",
-                            scheme.borrow().name(),
-                            settings,
-                            corpus.name
-                        )
-                    } else {
-                        format!(
-                            "benchmark failed for scheme {} with corpus {}",
-                            scheme.borrow().name(),
-                            corpus.name
-                        )
-                    }
-                })?;
+            let result = benchmark_scheme(scheme.borrow(), corpus, SAMPLES).with_context(|| {
+                if let Some(settings) = scheme.borrow().settings() {
+                    format!(
+                        "benchmark failed for scheme {} (settings '{}') with corpus {}",
+                        scheme.borrow().name(),
+                        settings,
+                        corpus.name
+                    )
+                } else {
+                    format!(
+                        "benchmark failed for scheme {} with corpus {}",
+                        scheme.borrow().name(),
+                        corpus.name
+                    )
+                }
+            })?;
             print_result(f.borrow_mut(), result).context("couldn't print result to stdout")?;
         }
     }
@@ -281,7 +277,7 @@ pub fn benchmark_compression_only<
     let corpora = read_corpora().context("couldn't read corpora")?;
     for scheme in schemes {
         for corpus in corpora.iter() {
-            let result = benchmark_compression_scheme(scheme.borrow(), &corpus, SAMPLES)
+            let result = benchmark_compression_scheme(scheme.borrow(), corpus, SAMPLES)
                 .with_context(|| {
                     if let Some(settings) = scheme.borrow().settings() {
                         format!(

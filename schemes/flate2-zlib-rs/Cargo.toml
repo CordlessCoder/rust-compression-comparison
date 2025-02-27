@@ -1,5 +1,5 @@
 [package]
-name = "flate2-zlib-ng"
+name = "flate2-zlib-rs"
 version = "0.1.0"
 edition = "2021"
 

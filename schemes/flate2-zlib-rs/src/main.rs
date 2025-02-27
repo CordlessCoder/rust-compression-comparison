@@ -10,7 +10,7 @@ enum DeflateAlgo {
 
 impl DescribeScheme for DeflateAlgo {
     fn name(&self) -> String {
-        "flate2 (zlib-ng)".to_string()
+        "flate2 (zlib-rs)".to_string()
     }
     fn settings(&self) -> Option<String> {
         match self {

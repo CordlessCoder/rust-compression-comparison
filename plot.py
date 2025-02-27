@@ -23,7 +23,7 @@ compression_ratio_by_scheme["uncompressed"] = 0
 # for easier comparison and better visualization, we group the schemes by what format they implement
 scheme_groups = [
     ["uncompressed"],
-    ["flate2 (rust)", "flate2 (zlib-ng)", "yazi"],
+    ["flate2 (rust)", "flate2 (zlib-ng)", "flat2 (zlib-rs)", "yazi"],
     ["deflate", "zopfli", "zopfli-rs"],
     ["lzzzz", "lz4_flex"],
     ["rust-lzma", "lzma-rs"],
@@ -67,7 +67,10 @@ corpora = list(reversed(["canterbury", "canterbury large", "silesia"]))
 # base colors from colorbrewer: https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=10
 colors = {
     "uncompressed": "#000000",
-    **{x: "#1f78b4" for x in ["flate2 (rust)", "flate2 (zlib-ng)", "yazi"]},
+    **{
+        x: "#1f78b4"
+        for x in ["flate2 (rust)", "flate2 (zlib-ng)", "flate2 (zlib-rs)", "yazi"]
+    },
     **{x: "#33a02c" for x in ["deflate", "zopfli", "zopfli-rs"]},
     **{x: "#e31a1c" for x in ["lzzzz", "lz4_flex"]},
     **{x: "#a6cee3" for x in ["rust-lzma", "lzma-rs"]},
@@ -81,7 +84,7 @@ colors = {
 """
 colors = {
     "uncompressed": "#000000",
-    **{x: "#1f78b4" for x in ["flate2 (rust)", "flate2 (zlib-ng)", "yazi"]},
+    **{x: "#1f78b4" for x in ["flate2 (rust)", "flate2 (zlib-ng)", "flat2 (zlib-rs)", "yazi"]},
     **{x: "#33a02c" for x in ["deflate", "zopfli", "zopfli-rs"]},
     "lzzzz": "#e31a1c",
     "lz4_flex": "#b00808",
@@ -101,6 +104,7 @@ markers = {
     "uncompressed": "o",
     "flate2 (rust)": "s",
     "flate2 (zlib-ng)": "d",
+    "flate2 (zlib-rs)": "s",
     "yazi": "o",
     "deflate": "o",
     "zopfli": "d",
